@@ -2,32 +2,48 @@
 #
 # === Authors
 #
-# Author Name <foppe.pieters@naturalis.nl>
+# Author Name <hugo.vanduijn@naturalis.nl>
 #
 # === Copyright
 #
 # Apache2 license 2017.
 #
 class role_salep (
+  $compose_version      = '1.17.0',
   $miniokey             = '123456',
   $miniosecret          = '12345678',
+  $repo_source          = 'https://github.com/naturalis/docker-salep.git',
+  $repo_ensure          = 'latest',
+  $repo_dir             = '/opt/salep',
 ){
+
+  include 'docker'
 
   file { '/data' :
     ensure              => directory,
   }
 
-  class { 'docker' :
-    version             => 'latest',
-  }
-  ->
-  docker_network { 'docker-net':
-    ensure              => present,
-    subnet              => '172.10.0.0/16',
+  class {'docker::compose': 
+    ensure      => present,
+    version     => $role_salep::compose_version
   }
 
-  class { 'role_salep::salep' :
-    require             => Class['docker']
+  package { 'git':
+    ensure   => installed,
+  }
+
+  vcsrepo { $role_salep::repo_dir:
+    ensure    => $role_salep::repo_ensure,
+    source    => $role_salep::repo_source,
+    provider  => 'git',
+    user      => 'root',
+    revision  => 'master',
+    require   => Package['git'],
+  }
+
+  docker_compose { "${role_salep::repo_dir}/docker-compose.yml":
+    ensure      => present,
+    require     => Vcsrepo[$role_salep::repo_dir]
   }
 
 }
