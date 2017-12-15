@@ -67,7 +67,7 @@ class role_salep (
 
   docker_compose { "${role_salep::repo_dir}/docker-compose.yml":
     ensure      => present,
-    options			=> "-f docker-compose.prod.yml --project-directory ${role_salep::repo_dir}",
+    options			=> "-f ${role_salep::repo_dir}/docker-compose.prod.yml --project-directory ${role_salep::repo_dir}",
     require     => [ 
 			Vcsrepo[$role_salep::repo_dir],
 			File[$traefik_acme_json],
