@@ -47,6 +47,12 @@ class role_salep (
 		require  => File['/opt/traefik'],
 	}
 
+  file { "${role_salep::repo_dir}/prod.env":
+		ensure   => file,
+		content  => template('role_salep/prod.env.erb'),
+    require  => Vcsrepo[$role_salep::repo_dir],
+	}
+
   class {'docker::compose': 
     ensure      => present,
     version     => $role_salep::compose_version
@@ -71,6 +77,7 @@ class role_salep (
     require     => [ 
 			Vcsrepo[$role_salep::repo_dir],
 			File[$traefik_acme_json],
+			File["${role_salep::repo_dir}/prod.env"],
 			File[$traefik_toml_file]
 		]
   }
