@@ -47,7 +47,7 @@ class role_salep (
 		require  => File['/opt/traefik'],
 	}
 
-  file { "${role_salep::repo_dir}/prod.env":
+  file { "${role_salep::repo_dir}/.env":
 		ensure   => file,
 		content  => template('role_salep/prod.env.erb'),
     require  => Vcsrepo[$role_salep::repo_dir],
@@ -71,14 +71,19 @@ class role_salep (
     require   => Package['git'],
   }
 
+	docker_network { 'web':
+		ensure   => present,
+	}
+
   docker_compose { "${role_salep::repo_dir}/docker-compose.yml":
     ensure      => present,
-    options			=> "-f ${role_salep::repo_dir}/docker-compose.prod.yml --project-directory ${role_salep::repo_dir}",
+#    options			=> "-f ${role_salep::repo_dir}/docker-compose.prod.yml --project-directory ${role_salep::repo_dir}",
     require     => [ 
 			Vcsrepo[$role_salep::repo_dir],
 			File[$traefik_acme_json],
 			File["${role_salep::repo_dir}/prod.env"],
-			File[$traefik_toml_file]
+			File[$traefik_toml_file],
+			Docker_network['web']
 		]
   }
 
@@ -95,7 +100,7 @@ class role_salep (
 
   exec { 'Run salep job' :
     command  => 'docker-compose exec -d salep bash -c "cd /usr/local/lib/python3.5/dist-packages/ebay_scraper; scrapy crawl ebay_spider"',
-    schedule => 'everyday',
+    schedule => 'weekly',
     require  => Exec['Up the containers to resolve updates'],
   }
 
@@ -127,6 +132,12 @@ class role_salep (
      repeat  => 1,
      range => '5-7',
   }
- 
+
+  schedule { 'weekly':
+     period  => weekly,
+     repeat  => 1,
+     range => '5-7',
+  }
+
 
 }
