@@ -81,7 +81,7 @@ class role_salep (
     require     => [ 
 			Vcsrepo[$role_salep::repo_dir],
 			File[$traefik_acme_json],
-			File["${role_salep::repo_dir}/prod.env"],
+			File["${role_salep::repo_dir}/.env"],
 			File[$traefik_toml_file],
 			Docker_network['web']
 		]
