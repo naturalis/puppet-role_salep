@@ -32,19 +32,19 @@ class role_salep (
     cwd  => "${role_salep::repo_dir}",
   }
 
-  file { ['/data','/data/traefik'] :
+  file { ['/data','/opt/traefik'] :
     ensure              => directory,
   }
 
 	file { $traefik_toml_file :
 		ensure   => file,
 		content  => template('role_salep/traefik.toml.erb'),
-		require  => File['/data/traefik'],
+		require  => File['/opt/traefik'],
 	}
 
   file { $traefik_acme_json :
 		ensure   => present,
-		require  => File['/data/traefik'],
+		require  => File['/opt/traefik'],
 	}
 
   class {'docker::compose': 
