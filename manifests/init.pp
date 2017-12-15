@@ -137,6 +137,7 @@ class role_salep (
      period  => weekly,
      repeat  => 1,
      range => '5-7',
+		 weekday => 'Saturday'
   }
 
 
