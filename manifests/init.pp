@@ -40,18 +40,21 @@ class role_salep (
 		ensure   => file,
 		content  => template('role_salep/traefik.toml.erb'),
 		require  => File['/opt/traefik'],
+		notify   => Exec['Restart containers on change'],
 	}
 
   file { $traefik_acme_json :
 		ensure   => present,
 		mode     => '0600',
 		require  => File['/opt/traefik'],
+		notify   => Exec['Restart containers on change'],
 	}
 
   file { "${role_salep::repo_dir}/.env":
 		ensure   => file,
 		content  => template('role_salep/prod.env.erb'),
     require  => Vcsrepo[$role_salep::repo_dir],
+		notify   => Exec['Restart containers on change'],
 	}
 
   class {'docker::compose': 
@@ -125,6 +128,12 @@ class role_salep (
 			Docker_compose["${role_salep::repo_dir}/docker-compose.yml"]
 			]
   }
+
+  exec {'Restart containers on change':
+	  refreshonly => true,
+		command     => 'docker-compose up -d',
+		require     => Docker_compose["${role_salep::repo_dir}/docker-compose.yml"],
+	}
 
   # deze gaat per dag 1 keer checken
   # je kan ook een range aan geven, bv tussen 7 en 9 's ochtends
