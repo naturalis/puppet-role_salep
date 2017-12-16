@@ -44,6 +44,7 @@ class role_salep (
 
   file { $traefik_acme_json :
 		ensure   => present,
+		mode     => '0600',
 		require  => File['/opt/traefik'],
 	}
 
@@ -124,7 +125,7 @@ class role_salep (
 			Docker_compose["${role_salep::repo_dir}/docker-compose.yml"]
 			]
   }
-  
+
   # deze gaat per dag 1 keer checken
   # je kan ook een range aan geven, bv tussen 7 en 9 's ochtends
   schedule { 'everyday':
