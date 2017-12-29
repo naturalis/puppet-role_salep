@@ -103,7 +103,7 @@ class role_salep (
   }
 
   exec { 'Run salep job' :
-    command  => 'docker-compose exec -d salep bash -c "cd /usr/local/lib/python3.5/dist-packages/ebay_scraper; scrapy crawl ebay_spider"',
+    command  => 'docker-compose exec -d salep bash -c "cd /usr/local/lib/python3.5/dist-packages/ebay_scraper; scrapy crawl ebay_spider  -o /data/csv/$(date +%Y-%m-%d).csv"',
     schedule => 'weekly',
     require  => Exec['Up the containers to resolve updates'],
   }
@@ -146,9 +146,8 @@ class role_salep (
   schedule { 'weekly':
      period  => weekly,
      repeat  => 1,
-     range => '5-7',
-		 weekday => 'Saturday'
+     range => '12:00-13:00',
+     weekday => 'Sun',
   }
-
 
 }
