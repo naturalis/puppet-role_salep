@@ -84,7 +84,7 @@ class role_salep (
     revision          => 'master',
     require           => [
         Package['git'],
-        File['/opt/salep_deploy_key'
+        File['/opt/salep_deploy_key']
       ]
   }
 
