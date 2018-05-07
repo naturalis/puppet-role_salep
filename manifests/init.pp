@@ -79,7 +79,7 @@ class role_salep (
     source            => $role_salep::repo_source,
     provider          => 'git',
     user              => 'root',
-    ssh_identity      => '/opt/salep_deploy_key',
+    identity          => '/opt/salep_deploy_key',
     trust_server_cert =>  true,
     revision          => 'master',
     require           => [
