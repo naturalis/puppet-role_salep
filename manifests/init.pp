@@ -13,7 +13,7 @@ class role_salep (
   $compose_version      = '1.17.0',
   $miniokey             = '12345',
   $miniosecret          = '12345678',
-  $repo_source          = 'https://github.com/naturalis/docker-salep.git',
+  $repo_source          = 'git://github.com/naturalis/docker-salep.git',
   $repo_ensure          = 'latest',
   $repo_dir             = '/opt/salep',
 	$kibana_auth          = 'traefik.frontend.auth.basic=kibana:$$apr1$$ftqdhhqs$$rkzzoj02m.k3eq4qkn3re/',
