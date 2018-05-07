@@ -9,6 +9,7 @@
 # Apache2 license 2017.
 #
 class role_salep (
+  $salep_deploy_key,
   $compose_version      = '1.17.0',
   $miniokey             = '12345',
   $miniosecret          = '12345678',
@@ -58,7 +59,7 @@ class role_salep (
 		notify   => Exec['Restart containers on change'],
 	}
 
-  class {'docker::compose': 
+  class {'docker::compose':
     ensure      => present,
     version     => $role_salep::compose_version
   }
@@ -67,13 +68,24 @@ class role_salep (
     ensure   => installed,
   }
 
+  file { '/opt/salep_deploy_key':
+    ensure  => present,
+    mode    => '0600',
+    content => $salep_deploy_key,
+  }
+
   vcsrepo { $role_salep::repo_dir:
-    ensure    => $role_salep::repo_ensure,
-    source    => $role_salep::repo_source,
-    provider  => 'git',
-    user      => 'root',
-    revision  => 'master',
-    require   => Package['git'],
+    ensure            => $role_salep::repo_ensure,
+    source            => $role_salep::repo_source,
+    provider          => 'git',
+    user              => 'root',
+    ssh_identity      => '/opt/salep_deploy_key',
+    trust_server_cert =>  true,
+    revision          => 'master',
+    require           => [
+        Package['git'],
+        File['/opt/salep_deploy_key'
+      ]
   }
 
 	docker_network { 'web':
