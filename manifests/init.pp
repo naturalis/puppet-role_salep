@@ -18,7 +18,7 @@ class role_salep (
   $repo_ensure          = 'latest',
   $repo_dir             = '/opt/salep',
 	$kibana_auth          = 'traefik.frontend.auth.basic=kibana:$$apr1$$ftqdhhqs$$rkzzoj02m.k3eq4qkn3re/',
-	$minio_url            = 'salep-minio.naturalis.nl',
+	$minio_url            = 'salep-storage.naturalis.nl',
 	$kibana_url						= 'salep-kibana.naturalis.nl',
   $lets_encrypt_mail    = 'mail@example.com',
 	$traefik_toml_file    = '/opt/traefik/traefik.toml',
