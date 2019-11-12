@@ -21,7 +21,9 @@ watch = true
 exposedbydefault = false
 
 [acme]
-email = "<%= @lets_encrypt_mail %>"
-storage = "acme.json"
-entryPoint = "https"
-OnHostRule = true
+  email = "<%= @lets_encrypt_mail %>"
+  storage = "acme.json"
+  entryPoint = "https"
+  OnHostRule = true
+  [acme.httpChallenge]
+    entryPoint = "http"
